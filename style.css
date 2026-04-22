@@ -1,40 +1,312 @@
+/* ── Variables ─────────────────────────────────────────── */
+:root {
+  --bg:        #0a0c10;
+  --surface:   #111318;
+  --border:    #1e2230;
+  --accent:    #00f5a0;
+  --accent2:   #00b4d8;
+  --warn:      #f5c400;
+  --text:      #c9d1e0;
+  --text-dim:  #4a5470;
+  --font-mono: 'Space Mono', monospace;
+  --font-body: 'DM Sans', sans-serif;
+  --radius:    6px;
+  --glow:      0 0 18px rgba(0, 245, 160, 0.25);
+}
+
+/* ── Reset & Base ──────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
-  padding-top: 20px;
+  font-family: var(--font-body);
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(ellipse at 20% 10%, rgba(0,245,160,0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 90%, rgba(0,180,216,0.04) 0%, transparent 50%);
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 40px 16px 60px;
+  color: var(--text);
 }
 
+/* ── App Container ─────────────────────────────────────── */
 #app-container {
-  width: 90%;
-  max-width: 600px;
-  margin: 0 auto;
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 560px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: fadeUp 0.5s ease both;
 }
 
-#status-output {
-  border: 1px solid #ccc;
-  padding: 15px;
-  margin-top: 15px;
-  background-color: #e0f7fa;
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Header ────────────────────────────────────────────── */
+#header {
+  border: 1px solid var(--border);
+  border-top: 2px solid var(--accent);
+  background: var(--surface);
+  padding: 28px 28px 24px;
+  border-radius: var(--radius);
+  position: relative;
+  overflow: hidden;
+}
+
+#header::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, var(--accent), transparent 60%);
+}
+
+#status-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+  margin-bottom: 14px;
+  box-shadow: 0 0 0 3px rgba(0,245,160,0.15);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(0,245,160,0.15); }
+  50%       { box-shadow: 0 0 0 6px rgba(0,245,160,0.05); }
+}
+
+#main-title {
+  font-family: var(--font-mono);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  transition: background-color 0.3s ease, color 0.3s ease, padding 0.3s ease;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+#main-title.lit {
+  background-color: var(--warn) !important;
+  color: #000 !important;
+  padding: 2px 8px;
+}
+
+#subtitle {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  margin-top: 6px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ── Control Panel ─────────────────────────────────────── */
+#control-panel {
+  display: flex;
+  gap: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  padding: 16px;
+  border-radius: var(--radius);
+  transition: opacity 0.1s;
 }
 
 #control-panel button,
 #control-panel a {
-  padding: 10px 15px;
-  margin: 5px;
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 16px;
   cursor: pointer;
-  border: none;
-  border-radius: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
   text-decoration: none;
-  display: inline-block; /* Ensure anchor tag acts like a button */
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
 }
 
-/* --- Task 2 Requirement: The Hiding Class --- */
-/* This class must be defined to enable the toggle functionality later. */
+#toggle-button {
+  background: transparent;
+  color: var(--accent);
+  border-color: rgba(0,245,160,0.3);
+}
+
+#toggle-button:hover {
+  background: rgba(0,245,160,0.08);
+  border-color: var(--accent);
+  box-shadow: var(--glow);
+}
+
+#timer-button {
+  background: transparent;
+  color: var(--accent2);
+  border-color: rgba(0,180,216,0.3);
+}
+
+#timer-button:hover {
+  background: rgba(0,180,216,0.08);
+  border-color: var(--accent2);
+  box-shadow: 0 0 18px rgba(0,180,216,0.25);
+}
+
+.btn-icon {
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+/* ── Status Output ─────────────────────────────────────── */
+#status-output {
+  border: 1px solid rgba(0,245,160,0.25);
+  border-left: 3px solid var(--accent);
+  background: var(--surface);
+  border-radius: var(--radius);
+  overflow: hidden;
+  animation: slideIn 0.25s ease both;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+#status-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(0,245,160,0.04);
+}
+
+#status-label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  background: rgba(0,245,160,0.12);
+  padding: 2px 7px;
+  border-radius: 3px;
+  animation: blink 1.4s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+
+#status-title {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text);
+  letter-spacing: 0.04em;
+}
+
+#status-text {
+  padding: 14px 18px 10px;
+  font-size: 0.88rem;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+#timestamp-list {
+  padding: 0 18px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+#timestamp-list span {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  padding: 3px 0;
+  border-top: 1px solid var(--border);
+}
+
+#timestamp-list span::before {
+  content: '→ ';
+  color: var(--accent);
+}
+
+/* ── List Section ──────────────────────────────────────── */
+#list-section {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+
+#list-section h2 {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 14px;
+}
+
+#item-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+#item-list li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 14px;
+  border-radius: 4px;
+  font-size: 0.88rem;
+  font-weight: 400;
+  border: 1px solid transparent;
+  transition: border-color 0.2s, background 0.2s;
+  animation: itemFadeIn 0.4s ease both;
+}
+
+#item-list li:nth-child(1) { animation-delay: 0.05s; }
+#item-list li:nth-child(2) { animation-delay: 0.10s; }
+#item-list li:nth-child(3) { animation-delay: 0.15s; }
+#item-list li:nth-child(4) { animation-delay: 0.20s; }
+#item-list li:nth-child(5) { animation-delay: 0.25s; }
+
+@keyframes itemFadeIn {
+  from { opacity: 0; transform: translateX(-8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+#item-list li:hover {
+  border-color: var(--border);
+  background: rgba(255,255,255,0.02);
+}
+
+.item-index {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  min-width: 20px;
+}
+
+/* ── Hidden Class (Task 2) ─────────────────────────────── */
 .hidden {
-  /* Sets the element to be completely invisible and not take up space. */
   display: none;
 }
