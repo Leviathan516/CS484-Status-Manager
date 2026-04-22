@@ -1,76 +1,81 @@
-// Task 1: Console verification
+// Task 1: Verification Log
 console.log("Status Manager Started");
 
-// Global variable for timer
+// Global variable for Task 10
 let intervalId = null;
 
-// Task 3: Change title on load
-const mainTitle = document.getElementById("main-title");
+// DOM references
+const mainTitle     = document.querySelector("#main-title");
+const toggleButton  = document.getElementById("toggle-button");
+const statusOutput  = document.querySelector("#status-output");
+const timerButton   = document.getElementById("timer-button");
+const controlPanel  = document.getElementById("control-panel");
+const itemList      = document.getElementById("item-list");
+const timestampList = document.getElementById("timestamp-list");
+
+/* ── Task 3: Update title on load ── */
 mainTitle.innerHTML = "DOM Project: Ready!";
 
-// Task 4: Add attribute to toggle button
-const toggleButton = document.getElementById("toggle-button");
+/* ── Task 4: Add data attribute ── */
 toggleButton.setAttribute("data-action", "status-toggle");
 
-// Select elements used multiple times
-const statusOutput = document.getElementById("status-output");
-const controlPanel = document.getElementById("control-panel");
-const timerButton = document.getElementById("timer-button");
+/* ── Task 9: Highlight list items ── */
+function highlightListItems() {
+  const items = document.querySelectorAll("li");
+  items.forEach(function (item) {
+    item.style.color = "#00b4d8";
+  });
+}
+highlightListItems();
 
-// Task 8: Create timestamp
+/* ── Task 8: Create timestamp ── */
 function createTimestamp() {
   const span = document.createElement("span");
-  span.innerHTML = " " + new Date().toLocaleTimeString();
-  statusOutput.appendChild(span);
+  span.innerHTML = "Event logged at " + new Date().toLocaleTimeString();
+  timestampList.appendChild(span);
 }
 
-// Task 5 + 6 + 7: Toggle function
+/* ── Tasks 5, 6, 7, 8: Toggle function ── */
 function toggleStatus(e) {
-  e.preventDefault(); // Task 6
+  // Task 6: prevent anchor jump
+  e.preventDefault();
 
+  // Task 5: toggle visibility
   statusOutput.classList.toggle("hidden");
 
-  // Task 7: Change background color
-  if (!statusOutput.classList.contains("hidden")) {
-    mainTitle.style.backgroundColor = "yellow";
+  const isVisible = !statusOutput.classList.contains("hidden");
 
-    // Task 8: Add timestamp
+  // Task 7: title background + class for smooth transition
+  if (isVisible) {
+    mainTitle.style.backgroundColor = "yellow";
+    mainTitle.classList.add("lit");
+    toggleButton.querySelector(".btn-label").textContent = "Hide Status";
+    // Task 8: append timestamp
     createTimestamp();
   } else {
     mainTitle.style.backgroundColor = "";
+    mainTitle.classList.remove("lit");
+    toggleButton.querySelector(".btn-label").textContent = "Toggle Status";
   }
 }
 
-// Add event listener
 toggleButton.addEventListener("click", toggleStatus);
 
-// Task 9: Highlight list items
-function highlightListItems() {
-  const items = document.querySelectorAll("#item-list li");
-
-  items.forEach(item => {
-    item.style.color = "blue";
-  });
-}
-
-// Run on page load
-highlightListItems();
-
-// Task 10: Flashing timer
+/* ── Task 10: Flashing timer ── */
 function startFlashing() {
-  if (!intervalId) {
-    intervalId = setInterval(() => {
-      controlPanel.classList.toggle("hidden");
-    }, 500);
-  }
+  if (intervalId !== null) return;
+  timerButton.querySelector(".btn-label").textContent = "Dbl-click to Stop";
+  intervalId = setInterval(function () {
+    controlPanel.classList.toggle("hidden");
+  }, 500);
 }
 
 function stopFlashing() {
   clearInterval(intervalId);
   intervalId = null;
-  controlPanel.classList.remove("hidden"); // ensure visible after stopping
+  controlPanel.classList.remove("hidden");
+  timerButton.querySelector(".btn-label").textContent = "Start Timer";
 }
 
-// Event listeners for timer
 timerButton.addEventListener("click", startFlashing);
 timerButton.addEventListener("dblclick", stopFlashing);
